@@ -41,6 +41,24 @@ export default buildModule("CourseContractModule", (m) => {
     100000000000000000000n,
   ], { id: 'createCourse1' });
 
+  m.call(courseContract, "createCourse", [
+    "Web3前端开发入门",
+    instructor,
+    400000000000000000000n,
+  ], { id: 'createCourse2' });
+
+  m.call(courseContract, "createCourse", [
+    "NFT市场开发实战",
+    instructor,
+    300000000000000000000n,
+  ], { id: 'createCourse3' });
+
+  m.call(courseContract, "createCourse", [
+    "DeFi协议开发实战",
+    instructor,
+    200000000000000000000n,
+  ], { id: 'createCourse4' });
+
   console.log("✅ 创建课程成功");
 
   return { courseContract };
