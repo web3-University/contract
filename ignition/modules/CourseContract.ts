@@ -3,6 +3,7 @@ import fs from "fs";
 
 export default buildModule("CourseContractModule", (m) => {
   const chainId = 31337;
+  // const chainId = 11155111;
 
   // ✅ 读取 token 地址
   const path = `./ignition/deployments/chain-${chainId}/deployed_addresses.json`;
@@ -38,7 +39,7 @@ export default buildModule("CourseContractModule", (m) => {
     "Solidity从入门到精通",
     instructor,
     100000000000000000000n,
-  ]);
+  ], { id: 'createCourse1' });
 
   console.log("✅ 创建课程成功");
 

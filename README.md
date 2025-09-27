@@ -55,3 +55,9 @@ After setting the variable, you can run the deployment with the Sepolia network:
 ```shell
 npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
 ```
+
+本地部署步骤：
+1.执行npx hardhat node
+2.在另一个终端执行npx hardhat ignition deploy --network sepolia ignition/modules/SimpleYDToken.ts 
+3.然后再执行npx hardhat ignition deploy --network sepolia ignition/modules/CourseContract.ts
+4.想部署到sepolia上的，需要去/ignition/modules/CourseContract.ts中修改chainId和讲师的地址
