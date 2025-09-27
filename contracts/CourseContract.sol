@@ -81,7 +81,7 @@ contract CourseContract is ICourseContract {
         require(bytes(title).length > 0, "Course title cannot be empty");
         require(bytes(title).length <= 100, "Course title too long");
         require(price > 0, "Course price must be greater than zero");
-        require(price < 500, "Course price must be less than 500");
+        require(price < 500 * 1e18, "Course price must be less than 500");
 
         // 生成新的课程ID
         courseId = ++totalCourses;
