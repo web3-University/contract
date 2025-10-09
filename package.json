@@ -20,7 +20,11 @@
     "forge-std": "foundry-rs/forge-std#v1.9.4",
     "hardhat": "^3.0.6",
     "mocha": "^11.0.0",
-    "typescript": "~5.8.0"
+    "typescript": "~5.8.0",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.4.0"
   },
   "type": "module"
 }
