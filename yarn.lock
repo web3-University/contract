@@ -521,6 +521,11 @@
   resolved "https://registry.npmmirror.com/@nomicfoundation/hardhat-toolbox-mocha-ethers/-/hardhat-toolbox-mocha-ethers-3.0.0.tgz#9abb600521b60980221a644c807ca184dfbc9392"
   integrity sha512-2WiLWh701im222k/rdSPaQSQzR5RdrpaIVbsGt9z42zqZoEmehoYidUcVrIWG1ocAvfHS9LuxHo6nBd0xMHRnQ==
 
+"@nomicfoundation/hardhat-toolbox@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.npmmirror.com/@nomicfoundation/hardhat-toolbox/-/hardhat-toolbox-5.0.0.tgz#165b47f8a3d2bf668cc5d453ce7f496a1156948d"
+  integrity sha512-FnUtUC5PsakCbwiVNsqlXVIWG5JIb5CEZoSXbJUsEBun22Bivx2jhF1/q9iQbzuaGpJKFQyOhemPB2+XlEE6pQ==
+
 "@nomicfoundation/hardhat-typechain@^3.0.0":
   version "3.0.0"
   resolved "https://registry.npmmirror.com/@nomicfoundation/hardhat-typechain/-/hardhat-typechain-3.0.0.tgz#255b5dc7e196c5a186504d610d0eee7ddaec732a"
@@ -639,6 +644,11 @@
     "@nomicfoundation/solidity-analyzer-linux-x64-gnu" "0.1.2"
     "@nomicfoundation/solidity-analyzer-linux-x64-musl" "0.1.2"
     "@nomicfoundation/solidity-analyzer-win32-x64-msvc" "0.1.2"
+
+"@openzeppelin/contracts@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.npmmirror.com/@openzeppelin/contracts/-/contracts-5.4.0.tgz#177594bdb2d86c71f5d1052fe40cb4edb95fb20f"
+  integrity sha512-eCYgWnLg6WO+X52I16TZt8uEjbtdkgLC0SUX/xnAksjjrQI4Xfn4iBRoI5j55dmlOhDv1Y7BoR3cU7e3WWhC6A==
 
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
