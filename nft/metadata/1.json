@@ -1,0 +1,28 @@
+{
+  "name": "Yideng NFT #1 - 区块链开发入门",
+  "description": "恭喜完成区块链开发入门课程！这是您获得的课程完成证书NFT，证明您已经掌握了区块链开发的基础知识。",
+  "image": "../images/1.png",
+  "external_url": "https://yideng.deu/courses/1",
+  "attributes": [
+    {
+      "trait_type": "课程ID",
+      "value": 1
+    },
+    {
+      "trait_type": "课程名称",
+      "value": "区块链开发入门"
+    },
+    {
+      "trait_type": "证书类型",
+      "value": "课程完成证书"
+    },
+    {
+      "trait_type": "难度级别",
+      "value": "入门"
+    },
+    {
+      "trait_type": "发行机构",
+      "value": "壹灯大学"
+    }
+  ]
+}
