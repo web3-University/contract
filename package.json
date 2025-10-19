@@ -1,4 +1,13 @@
 {
+  "scripts": {
+    "deploy:dao:local": "hardhat ignition deploy ./ignition/modules/CourseDAO.ts --network localhost",
+    "deploy:dao:sepolia": "hardhat ignition deploy ./ignition/modules/CourseDAO.ts --network sepolia",
+    "deploy:dao:mock": "hardhat ignition deploy ./ignition/modules/MockContracts.ts --network localhost",
+    "deploy:dao:full": "npm run deploy:dao:mock && npm run deploy:dao:local",
+    "interact:dao": "hardhat run scripts/interact-course-dao.ts --network localhost",
+    "test:dao": "hardhat run scripts/quick-test-dao.ts --network hardhat",
+    "node": "hardhat node"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^4.0.0",
     "@nomicfoundation/hardhat-ethers-chai-matchers": "^3.0.0",
@@ -24,7 +33,8 @@
     "typescript": "~5.8.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.4.0"
+    "@openzeppelin/contracts": "^5.4.0",
+    "@chainlink/contracts": "^1.2.0"
   },
   "type": "module"
 }
