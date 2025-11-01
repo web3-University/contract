@@ -1,66 +1,145 @@
-# Web3 大学课程合约系统
+# Web3 大学 去中心化在线教育平台智能合约
 
-一个基于以太坊智能合约的去中心化课程交易平台，支持课程创建、购买、进度追踪、退款和讲师提现等完整功能。
+Web3 大学 是一个基于区块链的去中心化在线教育平台，通过智能合约实现课程管理、代币经济、NFT 认证和社区治理功能。
 
-## 项目简介
+## 项目概述
 
-本项目采用模块化架构设计，实现了一个完整的链上课程管理和支付系统。主要特性包括：
+本项目包含四个核心智能合约：
 
-- **课程管理**：认证讲师创建、发布、更新和删除课程
-- **支付分账**：智能合约自动分账，讲师获得90%，平台获得10%
-- **学习进度追踪**：链上记录学生学习进度
-- **退款机制**：7天退款窗口，进度低于30%可申请70%退款
-- **讲师提现**：讲师可随时提取已赚取的收益
-- **质押挖矿**：YD代币支持质押获取收益（30/90/180天锁定期）
-- **讲师认证**：平台管理员可认证和管理讲师
-- **紧急控制**：支持合约暂停和紧急提款
+- **YiDengToken (YD)**: ERC20 代币合约，支持 ETH 兑换功能
+- **YiDengNFT (YDNFT)**: ERC721 NFT 合约，用于课程认证和成就展示
+- **YiDengDAO**: DAO 治理合约，实现社区民主决策
+- **CourseManage**: 课程管理合约，处理课程注册和购买
 
-## 技术架构
+## 技术栈
 
-### 核心合约
+- **Solidity**: ^0.8.28
+- **Hardhat**: ^3.0.10
+- **OpenZeppelin Contracts**: ^5.4.0
+- **Ethers.js**: ^6.15.0
+- **TypeScript**: ~5.8.3
 
-#### 1. CourseContract.sol
-主合约，整合所有功能模块：
-- 继承 `RefundModule`、`WithdrawalModule`、`ReentrancyGuard`、`Pausable`
-- 管理课程生命周期
-- 处理支付和分账逻辑
-- 提供完整的查询接口
+## 目录结构
 
-#### 2. SimpleYDToken.sol
-平台代币合约，支持：
-- ERC20 标准实现
-- ETH 兑换 YD（汇率 1:4000）
-- 质押挖矿功能（APY: 5%-20%）
-- 批量转账功能
+```
+contract/
+├── contracts/              # 智能合约源代码
+│   ├── YiDengToken.sol    # YD 代币合约
+│   ├── YiDengNFT.sol      # NFT 合约
+│   ├── YiDengDAO.sol      # DAO 治理合约
+│   └── CourseManage.sol   # 课程管理合约
+├── ignition/modules/      # Hardhat Ignition 部署脚本
+│   ├── YiDengToken.ts     # YD Token 部署模块
+│   ├── YiDengNFT.ts       # NFT 部署模块
+│   ├── YiDengDAO.ts       # DAO 部署模块
+│   └── CourseManage.ts    # 课程管理部署模块
+├── docs/                  # 详细文档
+│   ├── YD币经济模型设计.md
+│   ├── YiDengToken合约文档.md
+│   ├── YiDengNFT合约文档.md
+│   ├── YiDengDAO合约文档.md
+│   └── CourseManage合约文档.md
+└── hardhat.config.ts      # Hardhat 配置文件
+```
 
-### 模块化架构
+## 合约介绍
 
-#### Libraries（库文件）
-- `CourseManagement.sol` - 课程创建和管理逻辑
-- `PaymentDistributor.sol` - 支付分账逻辑
-- `ProgressTracker.sol` - 学习进度追踪
-- `PurchaseLogic.sol` - 购买流程和收益计算
-- `RefundLogic.sol` - 退款资格验证
-- `WithdrawalLogic.sol` - 提现逻辑
+### 1. YiDengToken (YD)
 
-#### Modules（功能模块）
-- `PurchaseModule.sol` - 购买相关数据结构
-- `QueryModule.sol` - 批量查询功能
-- `RefundModule.sol` - 退款请求管理
-- `WithdrawalModule.sol` - 讲师提现管理
+YD 是平台的治理和支付代币，基于 ERC20 标准。
 
-#### Interfaces（接口定义）
-- `ICourseContract.sol` - 课程合约接口
-- `IEconomicModel.sol` - 经济模型数据结构
-- `IERC20.sol` - ERC20 标准接口
+**核心功能**:
 
-## 部署指南
+- ETH 兑换 YD 代币
+- 代币铸造（仅所有者）
+- 代币销毁
+- 动态调整兑换比例
+
+**代币经济**:
+
+- 总供应量: 1000 万枚
+- 初始定价: 1 USD/YD
+- 分配方案:
+  - 社区空投: 10%
+  - 早期投资者: 15%
+  - 团队/顾问: 15%
+  - 生态激励: 35%
+  - Uniswap 流动性: 10%
+  - 市场营销: 5%
+
+详见: [YiDengToken 合约文档.md](docs/YiDengToken合约文档.md)
+
+### 2. YiDengNFT (YDNFT)
+
+NFT 合约用于课程完成认证和学习成就展示。
+
+**核心功能**:
+
+- 安全铸造 NFT
+- NFT 转移和授权
+- NFT 销毁
+- URI 存储与查询
+
+**应用场景**:
+
+- 课程完成证书
+- 学习成就徽章
+- 社区身份标识
+- 权益凭证
+
+详见: [YiDengNFT 合约文档.md](docs/YiDengNFT合约文档.md)
+
+### 3. YiDengDAO
+
+去中心化自治组织合约，实现社区治理功能。
+
+**核心功能**:
+
+- 创建提案（需质押 YD）
+- 一人一票投票机制
+- 自动奖励分发
+- 质押退还
+
+**治理机制**:
+
+- 投票期限: 7 天
+- 通过条件: 赞成票 > 反对票
+- 质押金额: 100 YD（可调整）
+- 奖励规则: 胜诉方获得奖励，败诉方无惩罚
+
+详见: [YiDengDAO 合约文档.md](docs/YiDengDAO合约文档.md)
+
+### 4. CourseManage
+
+课程管理合约，处理课程注册和购买。
+
+**核心功能**:
+
+- 课程注册（讲师）
+- 课程购买（学生）
+- 访问权限验证
+- 自动收益分配
+
+**分成机制**:
+
+- 讲师: 90%
+- 平台: 10%
+
+**设计特点**:
+
+- 合约不持有资金
+- 直接转账模式
+- 防重入攻击
+- 课程 ID 由后端生成
+
+详见: [CourseManage 合约文档.md](docs/CourseManage合约文档.md)
+
+## 快速开始
 
 ### 环境要求
 
-- Node.js >= 16.x
-- Hardhat 3.x
-- TypeScript 5.x
+- Node.js >= 18.0.0
+- npm 或 yarn
 
 ### 安装依赖
 
@@ -70,386 +149,330 @@ npm install
 yarn install
 ```
 
-### 本地部署步骤
+### 编译合约
 
-1. **启动本地 Hardhat 节点**
 ```bash
-npx hardhat node
+npx hardhat compile
 ```
 
-2. **部署 YD 代币合约**（新终端）
-```bash
-npx hardhat ignition deploy --network localhost ignition/modules/SimpleYDToken.ts
-```
-
-3. **部署课程合约**
-```bash
-npx hardhat ignition deploy --network localhost ignition/modules/CourseContract.ts
-```
-
-部署完成后，合约会自动创建4个示例课程：
-- Solidity从入门到精通（100 YD）
-- Web3前端开发入门（400 YD）
-- NFT市场开发实战（300 YD）
-- DeFi协议开发实战（200 YD）
-
-### Sepolia 测试网部署
-
-1. **配置环境变量**
-
-创建 Hardhat 变量（推荐使用 Hardhat Vars）：
-```bash
-npx hardhat vars set SEPOLIA_RPC_URL
-npx hardhat vars set SEPOLIA_PRIVATE_KEY
-npx hardhat vars set ETHERSCAN_API_KEY
-```
-
-2. **修改部署配置**
-
-编辑 [ignition/modules/CourseContract.ts](ignition/modules/CourseContract.ts)：
-```typescript
-// 修改第5-6行
-// const chainId = 31337;
-const chainId = 11155111;
-
-// 修改第29行，填入讲师地址
-11155111: "0xYourInstructorAddress",
-```
-
-3. **部署到 Sepolia**
-```bash
-npx hardhat ignition deploy --network sepolia ignition/modules/SimpleYDToken.ts
-npx hardhat ignition deploy --network sepolia ignition/modules/CourseContract.ts
-```
-
-4. **验证合约**（可选）
-```bash
-npx hardhat verify --network sepolia <CONTRACT_ADDRESS> <CONSTRUCTOR_ARGS>
-```
-
-## 核心功能说明
-
-### 1. 讲师认证系统
-
-只有认证讲师才能创建课程。平台管理员可以：
-
-```solidity
-// 认证单个讲师
-certifyInstructor(address instructor)
-
-// 批量认证讲师（最多100个）
-batchCertifyInstructors(address[] calldata instructors)
-
-// 撤销讲师认证
-revokeInstructor(address instructor)
-
-// 查询认证状态
-isCertifiedInstructor(address instructor) → bool
-```
-
-### 2. 课程管理
-
-**创建课程**（仅认证讲师）
-```solidity
-createCourse(
-    string memory title,        // 课程标题
-    address instructor,         // 讲师地址（必须是msg.sender）
-    uint256 price,             // 价格（YD代币）
-    uint256 totalLessons       // 总课时数
-) → uint256 courseId
-```
-
-**更新课程信息**
-```solidity
-updateCourse(uint256 courseId, string memory title, uint96 totalLessons)
-updateCoursePrice(uint256 courseId, uint256 newPrice)
-```
-
-**发布/下架课程**
-```solidity
-publishCourse(uint256 courseId)      // 发布课程
-unpublishCourse(uint256 courseId)    // 取消发布
-```
-
-**删除课程**
-```solidity
-deleteCourse(uint256 courseId)       // 仅当无学生购买时可删除
-```
-
-### 3. 购买课程
-
-学生购买课程时会自动：
-- 扣除学生账户 YD 代币
-- 平台收取 10%
-- 讲师收益 90% 计入待提现余额
-- 初始化学习进度
-- 记录购买时间戳
-
-```solidity
-purchaseCourse(uint256 courseId)
-```
-
-查询访问权限：
-```solidity
-hasAccess(address student, uint256 courseId) → bool
-batchCheckAccess(address student, uint256[] memory courseIds) → bool[]
-```
-
-### 4. 学习进度追踪
-
-```solidity
-// 更新进度
-updateProgress(uint256 courseId, uint256 completedLessons)
-
-// 查询进度
-getProgress(address student, uint256 courseId) → LearningProgress {
-    uint256 totalLessons;
-    uint256 completedLessons;
-    uint256 progressPercent;
-    uint256 lastUpdated;
-}
-```
-
-### 5. 退款机制
-
-**退款条件**：
-- 购买后 1-7 天内
-- 学习进度 ≤ 30%
-- 未曾退款过该课程
-
-**退款金额**：原价的 70%
-
-```solidity
-// 申请退款（自动审批）
-requestRefund(uint256 courseId) → uint256 requestId
-
-// 检查退款资格
-canRefund(address student, uint256 courseId) → (bool canRefundNow, string memory reason)
-
-// 详细退款信息
-getRefundEligibilityDetails(address student, uint256 courseId) → (
-    bool eligible,
-    string memory reason,
-    uint256 refundAmount,
-    uint256 daysRemaining,
-    uint256 progressPercent,
-    uint256 timeUntilEligible
-)
-```
-
-### 6. 讲师提现
-
-讲师可随时提取已赚取的收益：
-
-```solidity
-// 提现
-withdrawEarnings() → uint256 amount
-
-// 查询收益
-getInstructorEarnings(address instructor) → InstructorEarnings {
-    uint256 pending;      // 待提现金额
-    uint256 withdrawn;    // 已提现总额
-    uint256 refunded;     // 退款扣除总额
-}
-```
-
-**提现限制**：
-- 最小提现金额：10 YD
-- 提现冷却期：1 天
-
-### 7. YD 代币质押挖矿
-
-**质押套餐**：
-
-| 锁定期 | 年化收益率 (APY) |
-|--------|------------------|
-| 30天   | 5%               |
-| 90天   | 10%              |
-| 180天  | 20%              |
-
-**质押操作**：
-```solidity
-// 质押
-stake(uint256 amount, uint256 lockPeriod)  // lockPeriod: 30/90/180天
-
-// 解除质押
-unstake(bool forceUnlock)  // 提前解锁扣除20%本金
-
-// 领取收益（不解除质押）
-claimReward()
-
-// 查询质押信息
-getStakeInfo(address user) → StakeInfo
-calculatePendingReward(address user) → uint256
-canUnstake(address user) → bool
-```
-
-### 8. 平台管理
-
-**费率配置**（仅平台管理员）
-```solidity
-updateFeeConfig(FeeConfig memory newConfig)  // 讲师率 + 平台率必须 = 100
-updateRefundWindow(uint256 newWindow)        // 调整退款窗口
-updatePlatformAddress(address newPlatform)   // 更新平台地址
-```
-
-**紧急控制**
-```solidity
-pause()      // 暂停合约（禁止购买、退款、提现）
-unpause()    // 恢复运行
-emergencyWithdraw(address token, address to, uint256 amount)  // 紧急提款
-```
-
-**平台统计**
-```solidity
-getPlatformStats() → (
-    uint256 totalCourses,
-    uint256 totalInstructors,
-    uint256 totalRefunds,
-    uint256 totalEnrollments,
-    uint256 totalRevenue,
-    uint256 activeInstructors
-)
-
-getInstructorStats(address instructor) → (
-    uint256 coursesCreated,
-    uint256 totalStudents,
-    InstructorEarnings memory earnings
-)
-
-getCourseStats(uint256 courseId) → (
-    Course memory course,
-    uint256 studentsCount,
-    uint256 totalEarnings,
-    uint256 refundsCount
-)
-```
-
-### 9. 合约健康检查
-
-```solidity
-getContractHealth() → (
-    uint256 contractBalance,   // 合约YD余额
-    uint256 totalPending,      // 所有讲师待提现总额
-    bool isHealthy             // 余额 >= 待提现为健康
-)
-
-getInstructorList() → address[]  // 所有有收益的讲师列表
-```
-
-## 查询接口
-
-```solidity
-// 课程查询
-getCourse(uint256 courseId) → Course
-getTotalCourses() → uint256
-getCourseStudents(uint256 courseId) → address[]
-getCourseStudentCount(uint256 courseId) → uint256
-getInstructorCourses(address instructor) → uint256[]
-
-// 学生查询
-getStudentCourses(address student) → uint256[]
-getPurchaseTimestamp(address student, uint256 courseId) → uint256
-
-// 配置查询
-getFeeConfig() → FeeConfig
-isPaused() → bool
-```
-
-## 安全特性
-
-1. **重入保护**：使用 OpenZeppelin 的 `ReentrancyGuard`
-2. **访问控制**：多层级修饰符保护敏感操作
-3. **整数溢出保护**：Solidity 0.8+ 内置检查 + unchecked 优化
-4. **暂停机制**：紧急情况下可暂停核心功能
-5. **CEI 模式**：Checks-Effects-Interactions 防止重入攻击
-6. **Gas 优化**：
-   - 使用 `unchecked` 块
-   - 前缀自增 `++i`
-   - Storage 打包优化
-   - 批量操作限制（防止 gas 超限）
-
-## 测试
+### 运行测试
 
 ```bash
 # 运行所有测试
 npx hardhat test
 
-# 测试特定文件
-npx hardhat test test/CourseContract.test.ts
+# 运行 Solidity 测试
+npx hardhat test solidity
 
-# 测试覆盖率
-npx hardhat coverage
+# 运行 Mocha 测试
+npx hardhat test mocha
 ```
 
-## 项目结构
+## 部署指南
 
+### 本地部署
+
+#### 1. 启动本地节点
+
+```bash
+npx hardhat node
 ```
-contract/
-├── contracts/
-│   ├── CourseContract.sol          # 主合约
-│   ├── interfaces/                 # 接口定义
-│   │   ├── ICourseContract.sol
-│   │   ├── IEconomicModel.sol
-│   │   └── IERC20.sol
-│   ├── libraries/                  # 库文件
-│   │   ├── CourseManagement.sol
-│   │   ├── PaymentDistributor.sol
-│   │   ├── ProgressTracker.sol
-│   │   ├── PurchaseLogic.sol
-│   │   ├── RefundLogic.sol
-│   │   └── WithdrawalLogic.sol
-│   ├── modules/                    # 功能模块
-│   │   ├── PurchaseModule.sol
-│   │   ├── QueryModule.sol
-│   │   ├── RefundModule.sol
-│   │   └── WithdrawalModule.sol
-│   └── tokens/
-│       └── SimpleYDToken.sol       # YD代币合约
-├── ignition/
-│   └── modules/                    # 部署脚本
-│       ├── SimpleYDToken.ts
-│       └── CourseContract.ts
-├── test/                           # 测试文件
-├── hardhat.config.ts               # Hardhat配置
-├── package.json
-└── README.md
+
+#### 2. 部署 YiDengToken
+
+```bash
+npx hardhat ignition deploy ignition/modules/YiDengToken.ts --network localhost
 ```
+
+部署后会自动设置兑换比例为 1 ETH = 4000 YD。
+
+#### 3. 部署 YiDengNFT
+
+```bash
+npx hardhat ignition deploy ignition/modules/YiDengNFT.ts --network localhost
+```
+
+#### 4. 部署 YiDengDAO
+
+```bash
+npx hardhat ignition deploy ignition/modules/YiDengDAO.ts --network localhost
+```
+
+DAO 合约会自动使用已部署的 YD Token 地址，默认质押金额为 100 YD。
+
+#### 5. 部署 CourseManage
+
+```bash
+npx hardhat ignition deploy ignition/modules/CourseManage.ts --network localhost
+```
+
+CourseManage 会自动读取已部署的 YD Token 地址。
+
+### Sepolia 测试网部署
+
+#### 1. 配置私钥
+
+```bash
+npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+```
+
+#### 2. 配置 RPC URL
+
+设置环境变量或使用 hardhat-keystore:
+
+```bash
+npx hardhat keystore set SEPOLIA_RPC_URL
+```
+
+#### 3. 部署合约
+
+```bash
+# 部署 YD Token
+npx hardhat ignition deploy ignition/modules/YiDengToken.ts --network sepolia
+
+# 部署 NFT
+npx hardhat ignition deploy ignition/modules/YiDengNFT.ts --network sepolia
+
+# 部署 DAO
+npx hardhat ignition deploy ignition/modules/YiDengDAO.ts --network sepolia
+
+# 部署课程管理
+npx hardhat ignition deploy ignition/modules/CourseManage.ts --network sepolia
+```
+
+### 部署参数配置
+
+#### YiDengToken 参数
+
+- `initialOwner`: 合约所有者地址（默认: 第一个账户）
+- `exchangeRate`: ETH 到 YD 的兑换比例（默认: 4000）
+
+#### YiDengNFT 参数
+
+- `initialOwner`: 合约所有者地址（默认: 第一个账户）
+
+#### YiDengDAO 参数
+
+- `ydTokenAddress`: YD Token 合约地址（自动获取）
+- `stakeAmount`: 创建提案所需质押金额（默认: 100 YD）
+
+#### CourseManage 参数
+
+- `ydTokenAddress`: YD Token 合约地址（自动获取）
+- `platformAddress`: 平台收款地址（需配置）
+
+## 使用示例
+
+### YiDengToken - ETH 兑换 YD
+
+```javascript
+// 用户发送 1 ETH 兑换 YD 代币
+await ydToken.exchangeETHForTokens({ value: ethers.parseEther('1.0') })
+
+// 或直接向合约地址转账
+await signer.sendTransaction({
+  to: ydTokenAddress,
+  value: ethers.parseEther('1.0')
+})
+```
+
+### YiDengNFT - 铸造 NFT
+
+```javascript
+// 所有者铸造 NFT
+const recipient = '0x...'
+const tokenURI = 'ipfs://QmXxx...'
+const tokenId = await ydNFT.safeMint(recipient, tokenURI)
+```
+
+### YiDengDAO - 创建提案并投票
+
+```javascript
+// 1. 授权合约使用 YD 代币
+await ydToken.approve(daoAddress, ethers.parseEther('100'))
+
+// 2. 创建提案
+await ydDAO.createProposal('proposal-001')
+
+// 3. 投票
+await ydDAO.vote('proposal-001', true) // 投赞成票
+
+// 4. 7 天后执行提案（所有者操作）
+await ydDAO.executeProposalAndDistributeRewards(
+  'proposal-001',
+  ethers.parseEther('100') // 每个胜诉方获得 100 YD
+)
+```
+
+### CourseManage - 注册和购买课程
+
+```javascript
+// 讲师注册课程
+const courseId = 'course-uuid-12345' // 后端生成
+const price = ethers.parseEther('50') // 50 YD
+await courseManage.registerCourse(courseId, price)
+
+// 学生购买课程
+// 1. 授权
+await ydToken.approve(courseManageAddress, price)
+
+// 2. 购买
+await courseManage.purchaseCourse(courseId)
+
+// 3. 验证访问权限
+const hasAccess = await courseManage.hasAccess(studentAddress, courseId)
+```
+
+## 网络配置
+
+本项目支持以下网络：
+
+| 网络           | Chain ID | 说明               |
+| -------------- | -------- | ------------------ |
+| hardhatMainnet | -        | 本地模拟以太坊主网 |
+| hardhatOp      | -        | 本地模拟 OP 链     |
+| localhost      | 31337    | 本地 Hardhat 节点  |
+| sepolia        | 11155111 | Sepolia 测试网     |
+
+## 安全特性
+
+### YiDengToken
+
+- ✅ 权限控制（Ownable）
+- ✅ 输入验证
+- ✅ 事件记录
+- ✅ OpenZeppelin 标准库
+
+### YiDengNFT
+
+- ✅ 安全铸造（\_safeMint）
+- ✅ URI 存储
+- ✅ ERC721 标准兼容
+- ✅ 权限隔离
+
+### YiDengDAO
+
+- ✅ 质押机制
+- ✅ 一人一票防止垄断
+- ✅ 完整输入验证
+- ✅ 事件追踪
+
+### CourseManage
+
+- ✅ 重入攻击防护（ReentrancyGuard）
+- ✅ CEI 模式
+- ✅ 权限控制
+- ✅ 状态管理
+
+## 注意事项
+
+⚠️ **重要提示**:
+
+1. **YiDengToken**:
+
+   - 合约会锁定接收到的 ETH，没有提取功能
+   - 兑换时直接铸造新代币，理论上可以无限增发
+   - 建议在主网部署前进行安全审计
+
+2. **YiDengNFT**:
+
+   - TokenId 从 0 开始连续递增，不可重用
+   - URI 一旦设置无法修改
+   - 元数据需存储在 IPFS 或其他服务器
+
+3. **YiDengDAO**:
+
+   - 创建提案前必须授权合约转移质押代币
+   - 执行提案前合约必须有足够代币用于奖励
+   - 投票期固定为 7 天
+   - 投票者众多时执行提案 Gas 费用较高
+
+4. **CourseManage**:
+   - 课程 ID 必须由后端生成（推荐 UUID）
+   - 学生购买前必须先授权合约使用 YD 代币
+   - 合约不持有资金，代币直接转给讲师和平台
+   - 分成比例固定，不支持动态调整
 
 ## 经济模型
 
-### 分账比例
-- **讲师**：90%
-- **平台**：10%
-- **推荐人**：0%（预留字段）
+详细的代币经济模型设计请参考: [YD 币经济模型设计.md](docs/YD币经济模型设计.md)
 
-### 退款计算
-- **退款金额** = 原价 × 70%
-- **平台损失** = 原价 × 10%（已分账给平台）
-- **讲师扣除** = 原价 × 70%（从待提现余额扣除）
+核心要点:
 
-### 代币经济
-- **总供应量**：1,000,000 YD
-- **ETH 兑换率**：1 ETH = 4,000 YD
-- **质押最小金额**：100 YD
-- **提前解锁惩罚**：20% 本金
+- 总供应量: 1000 万 YD
+- 初始流动性: 100 万美元（Uniswap）
+- 销毁机制: 每月将协议收入的 30% 用于回购销毁
+- 应用场景: 购买课程、DAO 治理、激励机制
 
-## 已知限制
+## 开发工具
 
-1. **课程删除**：只能删除无学生购买的课程（软删除）
-2. **退款次数**：每个学生对每门课程只能退款一次
-3. **批量认证**：单次最多认证 100 个讲师（防止 gas 超限）
-4. **提现冷却**：讲师提现有 1 天冷却期
-5. **质押限制**：每个用户同时只能有一个活跃质押
+### 格式化代码
 
-## License
+```bash
+npx prettier --write 'contracts/**/*.sol'
+```
 
-MIT License
+### 查看合约大小
 
-## 贡献
+```bash
+npx hardhat size-contracts
+```
+
+### 生成文档
+
+```bash
+npx hardhat docgen
+```
+
+## 常见问题
+
+### Q: 如何更改 YD 代币的兑换比例？
+
+A: 合约所有者调用 `setExchangeRate(uint256 _newRate)` 函数。
+
+### Q: DAO 提案如何判定通过？
+
+A: 赞成票数 > 反对票数即为通过。
+
+### Q: 课程价格可以修改吗？
+
+A: 不可以。课程价格一旦上链不可修改，如需调整需重新注册新课程。
+
+### Q: 合约是否支持升级？
+
+A: 当前合约不支持升级。如需升级功能，建议使用代理模式重新部署。
+
+## 版本历史
+
+- **v1.0**: 初始版本
+  - YiDengToken: ETH 兑换功能
+  - YiDengNFT: NFT 铸造和管理
+  - YiDengDAO: 一人一票治理
+  - CourseManage: 课程注册和购买
+
+## 贡献指南
 
 欢迎提交 Issue 和 Pull Request！
 
+## 许可证
+
+MIT License
+
+## 相关链接
+
+- [Hardhat 文档](https://hardhat.org/docs)
+- [OpenZeppelin 文档](https://docs.openzeppelin.com/)
+- [Solidity 文档](https://docs.soliditylang.org/)
+- [Ethers.js 文档](https://docs.ethers.io/)
+
 ## 联系方式
 
-如有问题，请在 GitHub 仓库提交 Issue。
+如有问题或建议，请通过以下方式联系：
+
+- GitHub Issues
+- Discord 社区
+- Email
+
+---
+
+**免责声明**: 本项目仅供学习和研究使用，未经过完整的安全审计，请勿直接用于生产环境。
